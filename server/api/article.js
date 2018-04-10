@@ -69,8 +69,7 @@ router.get('/list', passport.authenticate('bearer', { session: false }), (req, r
       }
     }
   })
-});
-
+})
 // 查询单个文章
 router.get('/singleArticle', (req, res, next) => {
   var articleId = req.query.articleId;
@@ -97,8 +96,7 @@ router.get('/singleArticle', (req, res, next) => {
       }
     }
   })
-});
-
+})
 // 新增文章
 router.post('/increaseArticle', passport.authenticate('bearer', { session: false }), (req, res, next) => {
   let articleTitle = req.body.articleTitle
@@ -139,8 +137,7 @@ router.post('/increaseArticle', passport.authenticate('bearer', { session: false
       });
     }
   });
-});
-
+})
 // 删除文章
 router.post('/deleteArticle', passport.authenticate('bearer', { session: false }), (req, res, next) => {
   let articleId = req.body.articleId
@@ -171,7 +168,6 @@ router.post('/deleteArticle', passport.authenticate('bearer', { session: false }
     }
   })
 })
-
 // 修改文章
 router.post('/updateArticle', passport.authenticate('bearer', { session: false }), (req, res, next) => {
   let articleId = req.body.articleId
