@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "start": "PORT=22 nuxt start",
+    "start": "PORT=80 nuxt start",
     "build": "nuxt build && npm start"
   },
   "dependencies": {
