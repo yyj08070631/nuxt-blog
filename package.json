@@ -6,8 +6,14 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "start": "PORT=3002 nuxt start",
+    "start": "PORT=3389 nuxt start",
     "build": "nuxt build && npm start"
+  },
+  "config": {
+    "nuxt": {
+      "host": "0.0.0.0",
+      "port": 3389
+    }
   },
   "dependencies": {
     "axios": "^0.16.2",
