@@ -1,11 +1,18 @@
 var express = require('express')
 const app = express()
 var bodyParser = require('body-parser')
+var mongoose = require('mongoose')
 const morgan = require('morgan'); // 命令行log显示
 const passport = require('passport'); // 用户认证模块passport
 const Strategy = require('passport-http-bearer').Strategy; // token验证模块
 var session = require('express-session');
 import { Nuxt, Builder } from 'nuxt'
+
+
+mongoose.connect('mongodb://127.0.0.1:27017/blog')
+mongoose.connection.on('connected', function () { console.log('mongodb connected success') })
+mongoose.connection.on('error', function () { console.log('mongodb connected fail') })
+mongoose.connection.on('disconnected', function () { console.log('mongodb connected disconnected') })
 
 var index = require('./api/index');
 var users = require('./api/users');

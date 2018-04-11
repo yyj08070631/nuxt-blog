@@ -1,25 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var Article = require('../models/article');
-var mongoose = require('mongoose');
 const uuidV1 = require('uuid/v1');
 const passport = require('passport');
 require('../../util/util');
 require('../passport')(passport);
-
-mongoose.connect('mongodb://127.0.0.1:27017/blog');
-
-mongoose.connection.on('connected', function () {
-  console.log('mongodb connected success');
-});
-
-mongoose.connection.on('error', function () {
-  console.log('mongodb connected fail');
-});
-
-mongoose.connection.on('disconnected', function () {
-  console.log('mongodb connected disconnected');
-});
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
