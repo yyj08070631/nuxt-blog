@@ -1,13 +1,13 @@
 {
   "name": "blog",
   "version": "1.0.0",
-  "description": "Nuxt.js project",
+  "description": "YYJ's blog",
   "author": "934780820@qq.com",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "start": "PORT=3389 nuxt start",
-    "build": "nuxt build && npm start"
+    "dev": "backpack dev",
+    "build": "nuxt build && backpack build",
+    "start": "cross-env NODE_ENV=production node build/main.js"
   },
   "config": {
     "nuxt": {
@@ -19,13 +19,11 @@
     "axios": "^0.16.2",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
-    "bootstrap": "^3.3.7",
     "cross-env": "^5.0.1",
     "element-ui": "^2.2.1",
     "express": "^4.15.3",
     "express-session": "^1.15.6",
     "highlight.js": "^9.12.0",
-    "jquery": "^3.2.1",
     "jsonwebtoken": "^8.1.0",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
