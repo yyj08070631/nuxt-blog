@@ -9,9 +9,9 @@ var session = require('express-session');
 import { Nuxt, Builder } from 'nuxt'
 
 // 阿里云
-mongoose.connect('mongodb://47.106.134.14:27017/blog')
+// mongoose.connect('mongodb://47.106.134.14:27017/blog')
 
-// mongoose.connect('mongodb://127.0.0.1:27017/blog')
+mongoose.connect('mongodb://127.0.0.1:27017/blog')
 mongoose.connection.on('connected', function () { console.log('mongodb connected success') })
 mongoose.connection.on('error', function () { console.log('mongodb connected fail') })
 mongoose.connection.on('disconnected', function () { console.log('mongodb connected disconnected') })
@@ -21,7 +21,7 @@ var users = require('./api/users')
 var article = require('./api/article')
 
 // 阿里云
-process.env.HOST = '47.106.134.14'
+process.env.HOST = '127.0.0.1'
 process.env.PORT = 3389
 
 const host = process.env.HOST || '127.0.0.1'
