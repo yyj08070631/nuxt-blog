@@ -12,6 +12,7 @@
 export default {
   async asyncData ({ query, env }) {
     let { data } = await axios.get(`${env.baseUrl}/article/listF`)
+    console.log(env.baseUrl)
     return { articleList: data.data }
   },
   data () {
