@@ -1,19 +1,18 @@
 <template>
-  <el-container class="admin">
+  <div class="admin">
     <!-- 头部 -->
-    <el-header>
-      <ul class="left nav">
-        <li class="logo"><router-link to="/Index/ArticleList">{{title}}</router-link></li>
-        <li v-for="(item, index) in navLeft" :key="index"><router-link :to="item.href">{{item.title}}</router-link></li>
-      </ul>
-      <ul class="right nav">
-        <li v-for="(item, index) in navRight" :key="index"><router-link :to="item.href">{{item.title}}</router-link></li>
-        <!-- 登录登出 -->
-        <li v-if="!usernameView"><a href="javascript:;" @click="isLoginShow = true">登录</a></li>
-        <li v-if="!usernameView"><a href="javascript:;" @click="isRegistShow = true">注册</a></li>
-        <li v-if="usernameView"><a href="javascript:;" @click="logout">{{usernameView}}，登出</a></li>
-      </ul>
-    </el-header>
+    <div class="header">
+      <div class="left nav">
+        <div class="li logo"><router-link to="/Index/ArticleList" tag="div">{{title}}</router-link></div>
+        <div class="li" v-for="(item, index) in navLeft" :key="index"><router-link :to="item.href" tag="div">{{item.title}}</router-link></div>
+      </div>
+      <div class="right nav">
+        <div class="li" v-for="(item, index) in navRight" :key="index"><router-link :to="item.href" tag="div">{{item.title}}</router-link></div>
+        <div class="li" v-show="!usernameView"><div @click="isLoginShow = true">登录</div></div>
+        <div class="li" v-show="!usernameView"><div @click="isRegistShow = true">注册</div></div>
+        <div class="li" v-show="usernameView"><div @click="logout">{{usernameView}}，登出</div></div>
+      </div>
+    </div>
     <!-- 主体 -->
     <el-container>
       <!-- 边栏菜单 -->
@@ -32,10 +31,10 @@
       <el-main><router-view></router-view></el-main>
     </el-container>
     <!-- 登录组件 -->
-    <login :is-login-show="isLoginShow" @on-close="isLoginShow = false" @login-succ="(val) => { usernameView = val }"></login>
+    <login :is-login-show="isLoginShow" @on-close="isLoginShow = false" @login-succ="loginSucc"></login>
     <!-- 注册组件 -->
     <register :is-regist-show="isRegistShow" @on-close="isRegistShow = false"></register>
-  </el-container>
+  </div>
 </template>
 <script>
 import Login from '@/components/userOperation/Login'
@@ -70,6 +69,11 @@ export default {
     }
   },
   methods: {
+    // 登录成功回调
+    loginSucc (val) {
+      this.usernameView = val
+      this.$store.commit('COMMIT_IF_REFRESH_LIST', true)
+    },
     // 登出回调
     logout () {
       axios.post('/users/logout', { name: sessionStorage.YYJ_username })
@@ -117,8 +121,6 @@ export default {
       this.usernameView = session.YYJ_username
       setCookie('YYJ_username', session.YYJ_username, 1)
       axios.defaults.headers.common['Authorization'] = session.YYJ_token
-    } else {
-      console.log('sessionStorage is undefined')
     }
   }
 }
@@ -126,25 +128,34 @@ export default {
 <style lang="less" scoped>
 .admin {
   width: 100%;
-  header {
+  .header {
     display: flex;
     justify-content: space-between;
+    height: 60px;
+    padding: 0 20px;
     .nav {
       display: flex;
       height: 100%;
-      li {
+      .li {
         height: 100%;
         width: 90px;
-        a {
+        div {
           display: flex;
           justify-content: center;
           align-items: center;
           height: 100%;
           width: 90px;
+          font-size: 16px;
+          color: #606266;
+          transition: .2s all;
+          cursor: pointer;
+        }
+        div:hover {
+          color: #909399;
         }
       }
-      li.logo {
-        a {
+      .li.logo {
+        div {
           font-size: 32px;
           color: rgb(64, 158, 255);
         }

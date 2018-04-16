@@ -43,7 +43,6 @@ export default {
       axios.post('/users/accesstoken', { name: this.form.username, password: this.form.password }).then(response => {
         let res = response.data
         if (res.code === 200) {
-          console.log('登录成功!')
           axios.defaults.headers.common['Authorization'] = res.data.token
           sessionStorage.setItem('YYJ_token', res.data.token)
           sessionStorage.setItem('YYJ_username', res.data.name)
@@ -64,7 +63,7 @@ export default {
       })
 
       // 清空
-      // this.form = { username: '', password: '' }
+      this.form = { username: '', password: '' }
     }
   }
 }

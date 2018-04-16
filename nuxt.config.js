@@ -60,6 +60,9 @@ module.exports = {
     }
   },
   env: {
-    baseUrl: 'http://47.106.134.14:3389'
+    // 本地
+    baseUrl: 'http://localhost:3000'
+    // 部署
+    // baseUrl: 'http://47.106.134.14:3389'
   }
 }

@@ -5,7 +5,7 @@
     <!-- 新增 -->
     <el-button type="primary" @click="$router.push('/Admin/ArticleCreate')" style="margin-bottom:20px">新 增</el-button>
     <!-- 列表 -->
-    <el-table :data="articleList" border style="width: 100%">
+    <el-table v-loading="loading" :data="articleList" border style="width: 100%">
       <el-table-column type="index" :index="indexMethod"></el-table-column>
       <el-table-column prop="time" label="创建时间"></el-table-column>
       <el-table-column prop="title" label="文章标题"></el-table-column>
@@ -37,12 +37,14 @@ export default {
     return {
       deleteArticleId: '', // 要删除的文章id
       deleteTxt: '', // 删除文案
-      articleList: [] // 文章列表
+      articleList: [], // 文章列表
+      loading: false // 表格是否加载中
     }
   },
   methods: {
     // 初始化文章列表
     initArticleList () {
+      this.loading = true
       axios.get(`/article/list`)
         .then((response) => {
           var res = response.data
@@ -51,6 +53,7 @@ export default {
           } else {
             this.$message.error(res.msg)
           }
+          this.loading = false
         })
         .catch(err => {
           if (err.response.data === 'Unauthorized') {
@@ -60,6 +63,7 @@ export default {
             // 弹窗提示
             this.$message.error('未知错误')
           }
+          this.loading = false
         })
     },
     // 删除文章
@@ -104,6 +108,12 @@ export default {
             this.$message.error('未知错误')
           }
         })
+    }
+  },
+  watch: {
+    '$store.state.ifRefreshList' (val) {
+      if (val) { this.initArticleList() }
+      this.$store.commit('COMMIT_IF_REFRESH_LIST', false)
     }
   },
   created () {

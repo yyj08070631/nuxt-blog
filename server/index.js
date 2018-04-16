@@ -18,8 +18,8 @@ var users = require('./api/users')
 var article = require('./api/article')
 
 // 阿里云
-process.env.HOST = '47.106.134.14'
-process.env.PORT = 3389
+// process.env.HOST = '47.106.134.14'
+// process.env.PORT = 3389
 
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
