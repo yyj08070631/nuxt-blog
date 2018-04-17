@@ -6,13 +6,6 @@ const passport = require('passport');
 require('../../util/util');
 require('../passport')(passport);
 
-/* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.json({
-    text: 'respond with a resource'
-  });
-});
-
 /**
  * 后台接口
  */

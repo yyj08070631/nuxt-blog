@@ -2,7 +2,7 @@
   <ul class="article-list">
     <li class="article-item" v-for="(item, index) in articleList" :key="index">
       <div class="title">{{item.title}}</div>
-      <div class="time">{{item.time}}</div>
+      <div class="time">{{`${item.time} - ${item.viewNum} 次阅读 - ${item.commentNum} 条评论 - ${item.likeNum} 人喜欢`}}</div>
       <div class="content">{{item.content}}</div>
       <router-link :to="`/Index/ArticleDetail?articleId=${item.id}`" tag="div" class="view-all">阅读全文&nbsp;<i class="fa fa-angle-double-down" aria-hidden="true"></i></router-link>
     </li>
