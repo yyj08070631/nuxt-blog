@@ -61,8 +61,8 @@ module.exports = {
   },
   env: {
     // 本地
-    // baseUrl: 'http://localhost:3000'
+    baseUrl: 'http://localhost:3000'
     // 部署
-    baseUrl: 'http://47.106.134.14:3389'
+    // baseUrl: 'http://47.106.134.14:3389'
   }
 }
