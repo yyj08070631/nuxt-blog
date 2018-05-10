@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 var userSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
     unique: true, // 不可重复约束
     require: true // 不可为空约束
@@ -11,9 +11,17 @@ var userSchema = new mongoose.Schema({
     type: String,
     require: true // 不可为空约束
   },
-  token: {
-    type: String
-  }
+  role: {
+    type: Number,
+    default: 0 // 0: 普通用户, 1: 管理员
+  },
+  createTime: {
+    type: Number,
+    default: new Date().getTime()
+  },
+  token: String
+}, {
+  versionKey: false
 });
 
 // 添加用户保存时中间件对password进行bcrypt加密,这样保证用户密码只有用户本人知道

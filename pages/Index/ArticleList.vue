@@ -1,17 +1,19 @@
 <template>
   <ul class="article-list">
     <li class="article-item" v-for="(item, index) in articleList" :key="index">
-      <div class="title">{{item.title}}</div>
-      <div class="time">{{`${item.time} - ${item.viewNum} 次阅读 - ${item.commentNum} 条评论 - ${item.likeNum} 人喜欢`}}</div>
-      <div class="content">{{item.content}}</div>
-      <router-link :to="`/Index/ArticleDetail?articleId=${item.id}`" tag="div" class="view-all">阅读全文&nbsp;<i class="fa fa-angle-double-down" aria-hidden="true"></i></router-link>
+      <div class="title">{{item.articleTitle}}</div>
+      <div class="time">{{item.createTime | date}}{{` - ${item.viewNum} 次阅读 - ${item.comment.length} 条评论 - ${item.likeNum} 人喜欢`}}</div>
+      <div class="content">{{item.articleContent}}</div>
+      <router-link :to="`/Index/ArticleDetail?articleId=${item._id}`" tag="div" class="view-all">阅读全文&nbsp;<i class="fa fa-angle-double-down" aria-hidden="true"></i></router-link>
     </li>
   </ul>
 </template>
 <script>
+import formatDate from '~/util/util.js'
+
 export default {
   async asyncData ({ query, env }) {
-    let { data } = await axios.get(`${env.baseUrl}/article/listF`)
+    let { data } = await axios.get(`${env.baseUrl}/article/list`)
     return { articleList: data.data }
   },
   data () {
@@ -21,16 +23,17 @@ export default {
   methods: {
     // 初始化文章列表
     initArticleList () {
-      axios.get('/article/listF').then((response) => {
-        var res = response.data
+      axios.get('/article/list').then((response) => {
+        let res = response.data
         if (res.code === 200) {
           this.articleList = res.data
         } else {
-          console.log(res.msg)
+          this.$message.error(res.msg)
         }
       })
     }
   },
+  filters: { date (val) { return formatDate(val) } },
   created () {
     // this.initArticleList()
   }

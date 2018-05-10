@@ -7,8 +7,8 @@
     <!-- 列表 -->
     <el-table v-loading="loading" :data="articleList" border style="width: 100%">
       <el-table-column type="index" :index="indexMethod"></el-table-column>
-      <el-table-column prop="time" label="创建时间"></el-table-column>
-      <el-table-column prop="title" label="文章标题"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间"></el-table-column>
+      <el-table-column prop="articleTitle" label="文章标题"></el-table-column>
       <el-table-column fixed="right" label="操作" width="280">
         <template slot-scope="scope">
           <el-button type="info" @click="handleCheck(scope.row)">查 看</el-button>
@@ -21,6 +21,8 @@
 </template>
 <script>
 import VAdminTitle from '~/components/base/VAdminTitle'
+import formatDate from '~/util/util.js'
+
 export default {
   components: {
     VAdminTitle
@@ -49,6 +51,11 @@ export default {
         .then((response) => {
           var res = response.data
           if (res.code === 200) {
+            // 格式化更新时间
+            res.data = res.data.map(item => {
+              item.createTime = formatDate(item.createTime)
+              return item
+            })
             this.articleList = res.data
           } else {
             this.$message.error(res.msg)
@@ -86,12 +93,12 @@ export default {
     // 获取列表下标的方法
     indexMethod (index) { return index },
     // 查看回调
-    handleCheck (item) { this.$router.push(`/Index/ArticleDetail?articleId=${item.id}`) },
+    handleCheck (item) { this.$router.push(`/Index/ArticleDetail?articleId=${item._id}`) },
     // 编辑回调
-    handleEdit (item) { this.$router.push(`/Admin/ArticleEdit?articleId=${item.id}`) },
+    handleEdit (item) { this.$router.push(`/Admin/ArticleEdit?articleId=${item._id}`) },
     // 删除回调
     handleDelete (item) {
-      axios.post('/article/deleteArticle', { articleId: item.id })
+      axios.post('/article/deleteArticle', { articleId: item._id })
         .then(response => {
           let res = response.data
           if (res.code === 200) {

@@ -3,10 +3,10 @@
   <el-dialog class="login" title="登录" :visible.sync="isLoginShow" :before-close="closeDialog">
     <el-form :model="form">
       <el-form-item label="用户名" :label-width="formLabelWidth">
-        <el-input v-model="form.username" auto-complete="off"></el-input>
+        <el-input v-model="form.username" auto-complete="off" @keyup.enter.native="submitLogin"></el-input>
       </el-form-item>
       <el-form-item label="密码" :label-width="formLabelWidth">
-        <el-input type="password" v-model="form.password" auto-complete="off"></el-input>
+        <el-input type="password" v-model="form.password" auto-complete="off" @keyup.enter.native="submitLogin"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -40,14 +40,14 @@ export default {
     closeDialog () { this.$emit('on-close') },
     // 登录
     submitLogin () {
-      axios.post('/users/accesstoken', { name: this.form.username, password: this.form.password }).then(response => {
+      axios.post('/users/accesstoken', { username: this.form.username, password: this.form.password }).then(response => {
         let res = response.data
         if (res.code === 200) {
           axios.defaults.headers.common['Authorization'] = res.data.token
           sessionStorage.setItem('YYJ_token', res.data.token)
-          sessionStorage.setItem('YYJ_username', res.data.name)
-          setCookie('YYJ_username', res.data.name, 1)
-          this.$emit('login-succ', res.data.name)
+          sessionStorage.setItem('YYJ_username', res.data.username)
+          setCookie('YYJ_username', res.data.username, 1)
+          this.$emit('login-succ', res.data.username)
           this.closeDialog()
           // 提示
           this.$message.success(res.msg)

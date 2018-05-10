@@ -50,7 +50,7 @@ export default {
       if (this.form.username === '' || this.form.password === '' || this.form.passwordAgain === '') {
         this.$message.success('请填写所有信息')
       } else {
-        axios.post('/users/signup', { name: this.form.username, password: this.form.password })
+        axios.post('/users/signup', { username: this.form.username, password: this.form.password })
           .then((response) => {
             var res = response.data
             if (res.code === 200) {

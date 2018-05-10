@@ -1,52 +1,58 @@
-var express = require('express');
-var router = express.Router();
-var User = require('../models/user');
-var mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const config = require('../config');
-const passport = require('passport');
+/* use strict */
+var express = require('express')
+var router = express.Router()
+var User = require('../models/user')
+var mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
+const config = require('../config')
+const passport = require('passport')
 
 require('../passport')(passport);
 
 // 注册账户
 router.post('/signup', (req, res) => {
-  if (!req.body.name || !req.body.password) {
+  let username = req.body.username
+  let password = req.body.password
+
+  if (!username || !password) {
     res.json({
       code: 202,
       msg: '请输入您的账号密码',
       data: ''
-    });
+    })
   } else {
+    // 实例化一个User
     var newUser = new User({
-      name: req.body.name,
-      password: req.body.password
-    });
+      username: username,
+      password: password
+    })
     // 保存用户账号
     newUser.save((err) => {
       if (err) {
+        console.log(err)
         return res.json({
           code: 201,
           msg: '注册失败',
           data: ''
-        });
+        })
       }
       res.json({
         code: 200,
         msg: '成功创建新用户',
         data: ''
-      });
-    });
+      })
+    })
   }
-});
+})
 
 // 登录: 检查用户名与密码并生成一个accesstoken如果验证通过
 router.post('/accesstoken', (req, res) => {
   let sess = req.session
   let password = req.body.password
-  let name = req.body.name
+  let username = req.body.username
 
   User.findOne({
-    name: name
+    username: username
   }, (err, user) => {
     if (err) {
       throw err
@@ -61,7 +67,7 @@ router.post('/accesstoken', (req, res) => {
       // 检查密码是否正确
       user.comparePassword(password, (err, isMatch) => {
         if (isMatch && !err) {
-          var token = jwt.sign({ name: user.name }, config.secret, {
+          var token = jwt.sign({ username: user.username }, config.secret, {
             expiresIn: 7200000  // token到期时间设置
           })
           user.token = token
@@ -71,13 +77,13 @@ router.post('/accesstoken', (req, res) => {
             }
           })
           // username存session
-          req.session.YYJ_username = user.name
+          req.session.YYJ_userId = user._id
           res.json({
             code: 200,
             msg: '验证成功!',
             data: {
               token: 'Bearer ' + token,
-              name: user.name
+              username: user.username
             }
           })
         } else {
@@ -94,7 +100,7 @@ router.post('/accesstoken', (req, res) => {
 
 // 登出
 router.post('/logout', passport.authenticate('bearer', { session: false }), (req, res) => {
-  var conditions = {name: req.body.name}
+  var conditions = { username: req.body.username }
   var updates = {$set: {token: ''}}
   User.update(conditions, updates, err => {
     if (err) {

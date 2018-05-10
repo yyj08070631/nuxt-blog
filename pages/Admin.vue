@@ -76,7 +76,7 @@ export default {
     },
     // 登出回调
     logout () {
-      axios.post('/users/logout', { name: sessionStorage.YYJ_username })
+      axios.post('/users/logout', { username: sessionStorage.YYJ_username })
         .then(response => {
           let res = response.data
           if (res.code === 200) {

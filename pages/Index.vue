@@ -22,7 +22,7 @@ export default {
       navLeft: [], // 左侧导航
       navRight: [
         { title: '文章', href: '/Index/ArticleList' },
-        { title: '小玩具', href: '/Index/ArticleList' },
+        { title: '小玩具', href: '/Toys' },
         { title: '关于我', href: '/Me' }
       ] // 右侧导航
     }

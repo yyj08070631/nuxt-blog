@@ -8,6 +8,7 @@ const Strategy = require('passport-http-bearer').Strategy; // token验证模块
 var session = require('express-session');
 import { Nuxt, Builder } from 'nuxt'
 
+mongoose.Promise = global.Promise
 mongoose.connect('mongodb://127.0.0.1:27017/blog')
 mongoose.connection.on('connected', function () { console.log('mongodb connected success') })
 mongoose.connection.on('error', function () { console.log('mongodb connected fail') })

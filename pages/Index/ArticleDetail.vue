@@ -1,11 +1,13 @@
 <template>
   <div class="article-detail">
-    <h3>{{articleInfo.title}}</h3>
-    <p>{{articleInfo.time}}</p>
+    <h3>{{articleInfo.articleTitle}}</h3>
+    <p>{{articleInfo.createTime | date}}</p>
     <div class="content" v-html="compiledMarkdown"></div>
   </div>
 </template>
 <script>
+import formatDate from '~/util/util.js'
+
 export default {
   async asyncData ({ query, env }) {
     let { data } = await axios.get(`${env.baseUrl}/article/singleArticle?articleId=${query.articleId}`)
@@ -28,16 +30,15 @@ export default {
       })
     }
   },
-  created () {
-    // this.initArticle()
-  },
   computed: {
     compiledMarkdown () {
-      return marked(this.articleInfo.content, { sanitize: true })
+      return marked(this.articleInfo.articleContent || '', { sanitize: true })
     },
-    articleId () {
-      return this.$route.query.articleId || ''
-    }
+    articleId () { return this.$route.query.articleId || '' }
+  },
+  filters: { date (val) { return formatDate(val) } },
+  created () {
+    // this.initArticle()
   }
 }
 </script>

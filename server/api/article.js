@@ -1,89 +1,75 @@
-var express = require('express');
-var router = express.Router();
-var Article = require('../models/article');
-const uuidV1 = require('uuid/v1');
-const passport = require('passport');
-require('../../util/util');
-require('../passport')(passport);
+var express = require('express')
+var router = express.Router()
+var Article = require('../models/article')
+// const uuidV1 = require('uuid/v1')
+const passport = require('passport')
+const ObjectId = require("bson-objectid")
+require('../passport')(passport)
 
-/**
- * 后台接口
- */
+// ------------------------------------------ 复用 ------------------------------------------
 // 文章列表
-router.get('/list', passport.authenticate('bearer', { session: false }), (req, res, next) => {
-  let username = req.session.YYJ_username
+router.get('/list', (req, res, next) => {
+  let userId = req.session.YYJ_userId
   
-  if (!username || username === '') {
-    res.json({
-      code: 202,
-      msg: '用户未登录',
-      data: ''
-    })
-    return
-  }
+  // if (!userId || userId === '') {
+  //   res.json({
+  //     code: 202,
+  //     msg: '用户未登录',
+  //     data: ''
+  //   })
+  //   return
+  // }
 
-  Article.find({username: username}, (err, doc) => {
+  let conditions = userId ? { userId: userId } : null
+  Article.find(conditions, (err, doc) => {
     if (err) {
       res.json({
         code: 201,
         msg: err.message,
         data: ''
-      });
+      })
     } else {
       if (doc) {
-        var arr = [];
-        doc.forEach((item, index) => {
-          arr.push({
-            id: item.articleId,
-            time: item.createTime,
-            title: item.articleTitle
-          });
-        });
         res.json({
           code: 200,
           msg: '',
-          data: arr
-        });
+          data: doc
+        })
       }
     }
   })
 })
 // 查询单个文章
 router.get('/singleArticle', (req, res, next) => {
-  var articleId = req.query.articleId;
+  let articleId = req.query.articleId
 
-  Article.findOne({ articleId: articleId }, (err, doc) => {
+  Article.findOne({ _id: ObjectId(articleId) }, (err, doc) => {
     if (err) {
       res.json({
         code: 201,
         msg: err.message,
         data: ''
-      });
+      })
     } else {
-      var obj = {
-        title: doc.articleTitle,
-        time: doc.createTime,
-        content: doc.articleContent
-      };
       if (doc) {
         res.json({
           code: 200,
           msg: '',
-          data: obj
-        });
+          data: doc
+        })
       }
     }
   })
 })
+
+// ------------------------------------------ 后台 ------------------------------------------
 // 新增文章
 router.post('/increaseArticle', passport.authenticate('bearer', { session: false }), (req, res, next) => {
   let articleTitle = req.body.articleTitle
   let articleContent = req.body.articleContent
-  let username = req.session.YYJ_username
-  let createTime = new Date().Format('yyyy-MM-dd hh:mm:ss')
-  let articleId = uuidV1() // -> '6c84fb90-12c4-11e1-840d-7b25c5ee775a'
+  let userId = req.session.YYJ_userId
 
-  if (!username || username === '') {
+  if (!userId || userId === '') {
     res.json({
       code: 202,
       msg: '用户未登录',
@@ -95,9 +81,7 @@ router.post('/increaseArticle', passport.authenticate('bearer', { session: false
   var article = new Article({
     articleTitle: articleTitle,
     articleContent: articleContent,
-    articleId: articleId,
-    createTime: createTime,
-    username: username
+    userId: userId
   });
 
   article.save((err, doc) => {
@@ -119,9 +103,9 @@ router.post('/increaseArticle', passport.authenticate('bearer', { session: false
 // 删除文章
 router.post('/deleteArticle', passport.authenticate('bearer', { session: false }), (req, res, next) => {
   let articleId = req.body.articleId
-  let username = req.session.YYJ_username
+  let userId = req.session.YYJ_userId
 
-  if (!username || username === '') {
+  if (!userId || userId === '') {
     res.json({
       code: 202,
       msg: '用户未登录',
@@ -130,7 +114,7 @@ router.post('/deleteArticle', passport.authenticate('bearer', { session: false }
     return
   }
 
-  Article.remove({ username: username, articleId: articleId }, (err, doc) => {
+  Article.remove({ userId: userId, _id: ObjectId(articleId) }, (err, doc) => {
     if (err) {
       res.json({
         code: 201,
@@ -151,9 +135,9 @@ router.post('/updateArticle', passport.authenticate('bearer', { session: false }
   let articleId = req.body.articleId
   let articleTitle = req.body.articleTitle
   let articleContent = req.body.articleContent
-  let username = req.session.YYJ_username
+  let userId = req.session.YYJ_userId
 
-  if (!username || username === '') {
+  if (!userId || userId === '') {
     res.json({
       code: 202,
       msg: '用户未登录',
@@ -162,10 +146,10 @@ router.post('/updateArticle', passport.authenticate('bearer', { session: false }
     return
   }
 
-  var conditions = { username: username, articleId: articleId }
-  var update = { $set: { articleTitle: articleTitle, articleContent: articleContent } }
-  var options = {}
-  Article.update(conditions, update, options, function (err, doc) {
+  let conditions = { userId: userId, _id: ObjectId(articleId) }
+  let update = { $set: { articleTitle: articleTitle, articleContent: articleContent } }
+  let options = {}
+  Article.update(conditions, update, options, (err, doc) => {
     if (err) {
       res.json({
         code: 201,
@@ -182,37 +166,6 @@ router.post('/updateArticle', passport.authenticate('bearer', { session: false }
   })
 })
 
-/**
- * 前台接口
- */
-// 文章列表
-router.get('/listF', (req, res, next) => {
-  Article.find({}, (err, doc) => {
-    if (err) {
-      res.json({
-        code: 201,
-        msg: err.message,
-        data: ''
-      });
-    } else {
-      if (doc) {
-        var arr = [];
-        doc.forEach((item, index) => {
-          arr.push({
-            id: item.articleId,
-            time: item.createTime,
-            title: item.articleTitle,
-            content: item.articleContent.substring(0, 50)
-          });
-        });
-        res.json({
-          code: 200,
-          msg: '',
-          data: arr
-        });
-      }
-    }
-  })
-});
+// ------------------------------------------ 客户端 ------------------------------------------
 
-module.exports = router;
+module.exports = router

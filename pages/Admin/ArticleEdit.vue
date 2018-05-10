@@ -1,5 +1,5 @@
 <template>
-  <div id="article-edit">
+  <div class="article-edit">
     <div class="main">
       <!-- title -->
       <el-form ref="form" :model="form" label-width="80px">
@@ -35,7 +35,6 @@ export default {
   data () {
     return {
       form: {
-        articleId: '',
         articleTitle: '',
         articleContent: ''
       }
@@ -48,8 +47,7 @@ export default {
         .then((response) => {
           var res = response.data
           if (res.code === 200) {
-            this.form.articleTitle = res.data.title
-            this.form.articleContent = res.data.content
+            this.form = res.data
           } else {
             this.$message.error(res.msg)
           }
@@ -67,7 +65,7 @@ export default {
       if (this.form.articleTitle === '' || this.form.articleContent === '') {
         this.$message('标题或内容不能为空')
       } else {
-        axios.post('/article/updateArticle', this.form)
+        axios.post('/article/updateArticle', Object.assign(this.form, { articleId: this.articleIdParams }))
           .then((response) => {
             var res = response.data
             if (res.code === 200) {
@@ -92,22 +90,18 @@ export default {
     }, 300)
   },
   computed: {
-    compiledMarkdown: function () {
+    compiledMarkdown () {
       return marked(this.form.articleContent, { sanitize: true })
     },
-    articleIdParams () {
-      return this.$route.query.articleId ? this.$route.query.articleId : ''
-    }
+    articleIdParams () { return this.$route.query.articleId || '' }
   },
   mounted () {
-    // 初始化更新文章使用的id
-    this.form.articleId = this.$route.query.articleId ? this.$route.query.articleId : ''
     this.initArticle()
   }
 }
 </script>
 <style lang="less" scoped>
-#article-edit {
+.article-edit {
   .main {
     width: 90%;
     #editor {

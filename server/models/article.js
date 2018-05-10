@@ -2,18 +2,21 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let articleSchema = new Schema({
-  articleId: Number,
-  createTime: String,
-  articleTitle: String,
-  articleContent: String,
-  username: String,
-  viewNum: Number,
-  likeNum: Number,
+  createTime: { type: Number, default: new Date().getTime() },
+  articleTitle: { type: String, default: '' },
+  articleContent: { type: String, default: '' },
+  userId: { type: String, default: '' },
+  viewNum: { type: Number, default: 0 },
+  likeNum: { type: Number, default: 0 },
   comment: [{
-    commentatorName: String,
+    name: { type: String, require: true },
+    content: { type: String, require: true },
     email: String,
-    website: String
+    website: String,
+    ip: String
   }]
-});
+}, {
+  versionKey: false
+})
 
-module.exports = mongoose.model('Articles', articleSchema, 'articles');
+module.exports = mongoose.model('Articles', articleSchema, 'articles')
