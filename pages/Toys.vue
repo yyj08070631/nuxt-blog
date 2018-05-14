@@ -1,5 +1,7 @@
 <template>
-  <div class="toys"></div>
+  <div class="toys">
+    <router-view></router-view>
+  </div>
 </template>
 <script>
 export default {
@@ -7,5 +9,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.toys {}
+.toys {
+  overflow: hidden;
+}
 </style>

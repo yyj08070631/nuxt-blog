@@ -1,15 +1,14 @@
 const webpack = require('webpack')
+const pconfig = require('./publish-config').default
 
 module.exports = {
-  /*
-  ** Headers of the page
-  */
+  // Headers of the page
   head: {
     title: 'YYJ\'s blog',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Nuxt.js project' }
+      { hid: 'description', name: 'description', content: 'YYJ\'s blog' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: './static/favicon.ico' },
@@ -18,26 +17,22 @@ module.exports = {
     ],
     script: [
       // { src: 'https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js' },
-      // { src: 'https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js' }
     ]
   },
-  /*
-  ** Global CSS
-  */
+  // Global CSS
   css: [
     '~/assets/css/main.css',
     'element-ui/lib/theme-chalk/index.css'
   ],
   // plugins
   plugins: [
+    { src: '~plugins/vue-socket.io', ssr: false},
     { src: '~plugins/element-ui', ssr: true},
     { src: '~plugins/marked', ssr: true}
   ],
-  /*
-  ** Add axios globally
-  */
+  // Add axios globally
   build: {
-    vendor: ['axios', 'marked', 'lodash', 'element-ui'],
+    vendor: ['axios', 'marked', 'lodash', 'element-ui', 'vue-socket.io'],
     plugins: [
       new webpack.ProvidePlugin({
         axios: 'axios',
@@ -45,9 +40,7 @@ module.exports = {
         marked: 'marked'
       })
     ],
-    /*
-    ** Run ESLINT on save
-    */
+    // Run ESLINT on save
     extend(config, ctx) {
       if (ctx.isClient) {
         config.module.rules.push({
@@ -60,9 +53,6 @@ module.exports = {
     }
   },
   env: {
-    // 本地
-    baseUrl: 'http://localhost:3000'
-    // 部署
-    // baseUrl: 'http://47.106.134.14:3389'
+    baseUrl: pconfig.url
   }
 }
