@@ -41,7 +41,9 @@
     "vue-socket.io": "^2.1.1-b"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
     "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.4",
     "backpack-core": "^0.4.1",
     "eslint": "^4.3.0",
     "eslint-config-standard": "^10.2.1",

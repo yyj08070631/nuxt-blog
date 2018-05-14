@@ -40,7 +40,6 @@ module.exports = {
         marked: 'marked'
       })
     ],
-    // Run ESLINT on save
     extend(config, ctx) {
       if (ctx.isClient) {
         config.module.rules.push({
@@ -48,6 +47,15 @@ module.exports = {
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
           exclude: /(node_modules)/
+        })
+      }
+    },
+    extend(config, ctx) {
+      if (ctx.isClient) {
+        config.module.rules.push({
+          test: /\.js$/,
+          loader: 'babel-loader',
+          exclude: [/node_modules/, /.nuxt/]
         })
       }
     }
