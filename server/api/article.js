@@ -11,17 +11,16 @@ require('../passport')(passport)
 router.get('/list', (req, res, next) => {
   let userId = req.session.YYJ_userId
   
-  // if (!userId || userId === '') {
-  //   res.json({
-  //     code: 202,
-  //     msg: '用户未登录',
-  //     data: ''
-  //   })
-  //   return
-  // }
+  if (!userId || userId === '') {
+    res.json({
+      code: 202,
+      msg: '用户未登录',
+      data: ''
+    })
+    return
+  }
 
-  let conditions = userId ? { userId: userId } : null
-  Article.find(conditions, (err, doc) => {
+  Article.find({ userId: userId }, (err, doc) => {
     if (err) {
       res.json({
         code: 201,
@@ -167,5 +166,25 @@ router.post('/updateArticle', passport.authenticate('bearer', { session: false }
 })
 
 // ------------------------------------------ 客户端 ------------------------------------------
+// 文章列表
+router.get('/listAll', (req, res, next) => {
+  Article.find((err, doc) => {
+    if (err) {
+      res.json({
+        code: 201,
+        msg: err.message,
+        data: ''
+      })
+    } else {
+      if (doc) {
+        res.json({
+          code: 200,
+          msg: '',
+          data: doc
+        })
+      }
+    }
+  })
+})
 
 module.exports = router

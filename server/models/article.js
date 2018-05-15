@@ -11,6 +11,7 @@ let articleSchema = new Schema({
   comment: [{
     name: { type: String, require: true },
     content: { type: String, require: true },
+    createTime: { type: Number, default: new Date().getTime() },
     email: String,
     website: String,
     ip: String

@@ -13,7 +13,7 @@ import formatDate from '~/util/util.js'
 
 export default {
   async asyncData ({ query, env }) {
-    let { data } = await axios.get(`${env.baseUrl}/article/list`)
+    let { data } = await axios.get(`${env.baseUrl}/article/listAll`)
     return { articleList: data.data }
   },
   data () {
@@ -23,7 +23,7 @@ export default {
   methods: {
     // 初始化文章列表
     initArticleList () {
-      axios.get('/article/list').then((response) => {
+      axios.get('/article/listAll').then((response) => {
         let res = response.data
         if (res.code === 200) {
           this.articleList = res.data
@@ -33,7 +33,9 @@ export default {
       })
     }
   },
-  filters: { date (val) { return formatDate(val) } },
+  filters: {
+    date (val) { return formatDate(val) }
+  },
   created () {
     // this.initArticleList()
   }
